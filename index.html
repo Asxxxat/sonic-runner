@@ -1,0 +1,732 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Mini Game</title>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            font-family: sans-serif;
+            color: white;
+        }
+
+        #top-bar {
+            width: 100%;
+            background: #222;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #top-bar button {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        #top-bar button:hover {
+            background: #666;
+        }
+
+        #main-container {
+            margin-top: 60px; /* отступ вниз, чтобы не перекрывалось */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: calc(100vh - 60px);
+        }
+
+        #top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        #leaderboard, #terms {
+            width: 700px;
+            height: 812px;
+            background: #222;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #game-wrapper {
+            width: 700px;
+            height: 500px;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            width: 640px !important;
+            height: 360px !important;
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+<div id="top-bar">
+    <button onclick="showSection('game')">🎮 Game</button>
+    <button onclick="showSection('leaderboard')">🏆 Leaderboard</button>
+    <button onclick="showSection('terms')">📜 Terms</button>
+</div>
+
+<div id="main-container">
+    <div id="game-wrapper"></div>
+    <div id="leaderboard" class="hidden">
+        <h2>🏆 Leaderboard</h2>
+        <table style="width:100%; border-collapse: collapse; background:#333; color:white;">
+            <thead>
+            <tr style="background:#444;">
+                <th style="padding: 10px; text-align:left;">#</th>
+                <th style="padding: 10px; text-align:left;">Player</th>
+                <th style="padding: 10px; text-align:left;">Score</th>
+                <th style="padding: 10px; text-align:left;">Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td> 1</td>
+                <td>AlphaWolf</td>
+                <td>8248</td>
+                <td>02:14</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>NightHawk</td>
+                <td>8192</td>
+                <td>02:06</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>PixelHunter</td>
+                <td>7449</td>
+                <td>02:06</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>DarkRider</td>
+                <td>8104</td>
+                <td>02:30</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>CodeRunner</td>
+                <td>7126</td>
+                <td>02:33</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>GhostLogic</td>
+                <td>9299</td>
+                <td>01:57</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>IronPulse</td>
+                <td>9000</td>
+                <td>02:24</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>FireStorm</td>
+                <td>8947</td>
+                <td>01:56</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>ByteMaster</td>
+                <td>8318</td>
+                <td>01:48</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>CrimsonBlade</td>
+                <td>9308</td>
+                <td>02:23</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>ShadowBreak</td>
+                <td>9209</td>
+                <td>01:45</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>CyberFlash</td>
+                <td>8030</td>
+                <td>01:43</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>SteelEdge</td>
+                <td>7186</td>
+                <td>02:16</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>SilentStep</td>
+                <td>9973</td>
+                <td>02:12</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>RapidNova</td>
+                <td>9575</td>
+                <td>01:42</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>BlazeWing</td>
+                <td>8798</td>
+                <td>02:01</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td>StarBreaker</td>
+                <td>8897</td>
+                <td>02:24</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td>NeoByte</td>
+                <td>9776</td>
+                <td>02:20</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>QuantumShift</td>
+                <td>7342</td>
+                <td>01:51</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>HexaCore</td>
+                <td>7686</td>
+                <td>01:51</td>
+            </tr>
+            <tr>
+                <td>21</td>
+                <td>ZeroTrace</td>
+                <td>8516</td>
+                <td>02:19</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>PulseDrive</td>
+                <td>8644</td>
+                <td>02:14</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td>VortexRider</td>
+                <td>9380</td>
+                <td>01:58</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td>FlashPoint</td>
+                <td>8978</td>
+                <td>02:06</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td>StormUnit</td>
+                <td>7281</td>
+                <td>01:49</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td>NovaDrive</td>
+                <td>7141</td>
+                <td>02:28</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td>ProtoKnight</td>
+                <td>8591</td>
+                <td>02:37</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td>JetStrike</td>
+                <td>9660</td>
+                <td>01:42</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td>NanoBlade</td>
+                <td>8440</td>
+                <td>01:44</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td>DarkSpark</td>
+                <td>9307</td>
+                <td>02:25</td>
+            </tr>
+            <tr>
+                <td>31</td>
+                <td>IronPulse709</td>
+                <td>7870</td>
+                <td>02:17</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td>NovaDrive937</td>
+                <td>8404</td>
+                <td>01:59</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td>ZeroTrace929</td>
+                <td>9913</td>
+                <td>02:19</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td>SteelEdge32</td>
+                <td>9765</td>
+                <td>02:04</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td>CodeRunner423</td>
+                <td>8217</td>
+                <td>01:46</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td>IronPulse233</td>
+                <td>7369</td>
+                <td>02:26</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td>ByteMaster548</td>
+                <td>9245</td>
+                <td>02:28</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td>StarBreaker947</td>
+                <td>7095</td>
+                <td>02:00</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td>StormUnit544</td>
+                <td>7275</td>
+                <td>02:37</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td>VortexRider206</td>
+                <td>7455</td>
+                <td>02:30</td>
+            </tr>
+            <tr>
+                <td>41</td>
+                <td>NightHawk183</td>
+                <td>7014</td>
+                <td>02:06</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td>SteelEdge682</td>
+                <td>8372</td>
+                <td>01:49</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td>NeoByte672</td>
+                <td>7422</td>
+                <td>02:04</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td>AlphaWolf582</td>
+                <td>9171</td>
+                <td>01:55</td>
+            </tr>
+            <tr>
+                <td>95</td>
+                <td>ZeroTrace76</td>
+                <td>8676</td>
+                <td>01:59</td>
+            </tr>
+            <tr>
+                <td>96</td>
+                <td>DarkRider626</td>
+                <td>9807</td>
+                <td>01:48</td>
+            </tr>
+            <tr>
+                <td>97</td>
+                <td>CyberFlash825</td>
+                <td>8354</td>
+                <td>02:10</td>
+            </tr>
+            <tr>
+                <td>98</td>
+                <td>BlazeWing454</td>
+                <td>8671</td>
+                <td>02:11</td>
+            </tr>
+            <tr>
+                <td>99</td>
+                <td>VortexRider719</td>
+                <td>9848</td>
+                <td>01:56</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>QuantumShift731</td>
+                <td>7196</td>
+                <td>01:54</td>
+            </tr>
+            <tr>
+                <td>101</td>
+                <td>VortexRider639</td>
+                <td>8837</td>
+                <td>02:01</td>
+            </tr>
+            <tr>
+                <td>102</td>
+                <td>ProtoKnight865</td>
+                <td>9797</td>
+                <td>02:04</td>
+            </tr>
+            <tr>
+                <td>103</td>
+                <td>AlphaWolf894</td>
+                <td>8361</td>
+                <td>02:20</td>
+            </tr>
+            <tr>
+                <td>104</td>
+                <td>CodeRunner897</td>
+                <td>8059</td>
+                <td>02:24</td>
+            </tr>
+            <tr>
+                <td>105</td>
+                <td>SteelEdge360</td>
+                <td>9608</td>
+                <td>02:05</td>
+            </tr>
+            <tr>
+                <td>106</td>
+                <td>PixelHunter871</td>
+                <td>7284</td>
+                <td>02:06</td>
+            </tr>
+            <tr>
+                <td>107</td>
+                <td>StormUnit301</td>
+                <td>8145</td>
+                <td>02:25</td>
+            </tr>
+            <tr>
+                <td>108</td>
+                <td>ByteMaster123</td>
+                <td>8619</td>
+                <td>02:39</td>
+            </tr>
+            <tr>
+                <td>109</td>
+                <td>StormUnit814</td>
+                <td>9645</td>
+                <td>01:53</td>
+            </tr>
+            <tr>
+                <td>110</td>
+                <td>GhostLogic982</td>
+                <td>9186</td>
+                <td>01:52</td>
+            </tr>
+            <tr>
+                <td>111</td>
+                <td>SilentStep189</td>
+                <td>9769</td>
+                <td>02:32</td>
+            </tr>
+            <tr>
+                <td>112</td>
+                <td>NightHawk414</td>
+                <td>7805</td>
+                <td>02:03</td>
+            </tr>
+            <tr>
+                <td>113</td>
+                <td>PulseDrive887</td>
+                <td>7823</td>
+                <td>01:50</td>
+            </tr>
+            <tr>
+                <td>114</td>
+                <td>DarkRider779</td>
+                <td>7676</td>
+                <td>02:40</td>
+            </tr>
+            <tr>
+                <td>115</td>
+                <td>DarkRider437</td>
+                <td>9888</td>
+                <td>02:31</td>
+            </tr>
+            <tr>
+                <td>116</td>
+                <td>NightHawk69</td>
+                <td>7046</td>
+                <td>01:56</td>
+            </tr>
+            <tr>
+                <td>117</td>
+                <td>ByteMaster700</td>
+                <td>7184</td>
+                <td>02:13</td>
+            </tr>
+            <tr>
+                <td>118</td>
+                <td>StormUnit155</td>
+                <td>7207</td>
+                <td>02:11</td>
+            </tr>
+            <tr>
+                <td>119</td>
+                <td>RapidNova937</td>
+                <td>8610</td>
+                <td>02:36</td>
+            </tr>
+            <tr>
+                <td>120</td>
+                <td>VortexRider721</td>
+                <td>9363</td>
+                <td>02:02</td>
+            </tr>
+            <tr>
+                <td>121</td>
+                <td>NanoBlade361</td>
+                <td>8048</td>
+                <td>02:31</td>
+            </tr>
+            <tr>
+                <td>122</td>
+                <td>FireStorm132</td>
+                <td>9011</td>
+                <td>02:18</td>
+            </tr>
+            <tr>
+                <td>123</td>
+                <td>ShadowBreak888</td>
+                <td>8388</td>
+                <td>01:43</td>
+            </tr>
+            <tr>
+                <td>124</td>
+                <td>IronPulse812</td>
+                <td>8723</td>
+                <td>01:44</td>
+            </tr>
+            <tr>
+                <td>125</td>
+                <td>ShadowBreak561</td>
+                <td>9203</td>
+                <td>01:57</td>
+            </tr>
+            <tr>
+                <td>126</td>
+                <td>QuantumShift248</td>
+                <td>7555</td>
+                <td>02:05</td>
+            </tr>
+            <tr>
+                <td>127</td>
+                <td>NightHawk218</td>
+                <td>9195</td>
+                <td>02:32</td>
+            </tr>
+            <tr>
+                <td>128</td>
+                <td>NovaDrive785</td>
+                <td>9045</td>
+                <td>02:01</td>
+            </tr>
+            <tr>
+                <td>129</td>
+                <td>CodeRunner747</td>
+                <td>8585</td>
+                <td>02:16</td>
+            </tr>
+            <tr>
+                <td>130</td>
+                <td>FireStorm348</td>
+                <td>9770</td>
+                <td>02:01</td>
+            </tr>
+            <tr>
+                <td>131</td>
+                <td>IronPulse964</td>
+                <td>9788</td>
+                <td>02:23</td>
+            </tr>
+            <tr>
+                <td>132</td>
+                <td>BlazeWing403</td>
+                <td>7086</td>
+                <td>01:52</td>
+            </tr>
+            <tr>
+                <td>133</td>
+                <td>DarkSpark233</td>
+                <td>9713</td>
+                <td>02:03</td>
+            </tr>
+            <tr>
+                <td>134</td>
+                <td>PixelHunter370</td>
+                <td>7171</td>
+                <td>02:22</td>
+            </tr>
+            <tr>
+                <td>135</td>
+                <td>VortexRider657</td>
+                <td>9187</td>
+                <td>01:47</td>
+            </tr>
+            <tr>
+                <td>136</td>
+                <td>DarkSpark736</td>
+                <td>9288</td>
+                <td>01:58</td>
+            </tr>
+            <tr>
+                <td>137</td>
+                <td>FireStorm193</td>
+                <td>7859</td>
+                <td>02:03</td>
+            </tr>
+            <tr>
+                <td>138</td>
+                <td>ShadowBreak758</td>
+                <td>9043</td>
+                <td>02:37</td>
+            </tr>
+            <tr>
+                <td>139</td>
+                <td>DarkRider80</td>
+                <td>7973</td>
+                <td>02:20</td>
+            </tr>
+            <tr>
+                <td>140</td>
+                <td>FlashPoint978</td>
+                <td>9640</td>
+                <td>01:57</td>
+            </tr>
+            <tr>
+                <td>141</td>
+                <td>HexaCore838</td>
+                <td>7752</td>
+                <td>01:59</td>
+            </tr>
+            <tr>
+                <td>142</td>
+                <td>StarBreaker661</td>
+                <td>8471</td>
+                <td>02:17</td>
+            </tr>
+            <tr>
+                <td>143</td>
+                <td>ZeroTrace479</td>
+                <td>9122</td>
+                <td>02:12</td>
+            </tr>
+
+
+            <tr>
+                <td>144</td>
+                <td>ByteMaster474</td>
+                <td>9079</td>
+                <td>02:25</td>
+            </tr>
+            <tr>
+                <td>145</td>
+                <td>SilentStep353</td>
+                <td>9264</td>
+                <td>01:46</td>
+            </tr>
+            <tr>
+                <td>146</td>
+                <td>DarkRider776</td>
+                <td>7407</td>
+                <td>02:21</td>
+            </tr>
+            <tr>
+                <td>147</td>
+                <td>PulseDrive417</td>
+                <td>8635</td>
+                <td>02:10</td>
+            </tr>
+            <tr>
+                <td>148</td>
+                <td>ProtoKnight354</td>
+                <td>9968</td>
+                <td>02:09</td>
+            </tr>
+            <tr>
+                <td>149</td>
+                <td>NightHawk920</td>
+                <td>9624</td>
+                <td>01:58</td>
+            </tr>
+            <tr>
+                <td>150</td>
+                <td>CodeRunner895</td>
+                <td>9466</td>
+                <td>01:53</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="terms" class="hidden">
+        <h2>📜 Terms & Conditions</h2>
+        <p>By playing this game, you agree to the following terms:</p>
+        <ul style="line-height: 1.6;">
+            <li>This game is for entertainment purposes only.</li>
+            <li>Your progress may not be saved.</li>
+            <li>Any scores shown on the leaderboard are fictional.</li>
+            <li>No personal data is collected or stored.</li>
+            <li>The developers are not responsible for addiction to fun.</li>
+        </ul>
+        <p>If you do not agree with these terms, please close the game page.</p>
+    </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+<script>
+    function showSection(section) {
+        document.getElementById("game-wrapper").style.display = section === "game" ? "flex" : "none";
+        document.getElementById("leaderboard").classList.toggle("hidden", section !== "leaderboard");
+        document.getElementById("terms").classList.toggle("hidden", section !== "terms");
+    }
+</script>
+</body>
+</html>
