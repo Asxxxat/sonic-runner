@@ -17,6 +17,6 @@ const k = kaplay({
     debug: false,
 });
 
-document.getElementById("game-wrapper").appendChild(k.canvas);
+document.getElementById("game-wrapper").prepend(k.canvas);
 
 export default k;
