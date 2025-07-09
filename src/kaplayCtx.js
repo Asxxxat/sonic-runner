@@ -17,6 +17,9 @@ const k = kaplay({
     debug: false,
 });
 
-document.getElementById("game-wrapper").prepend(k.canvas);
+const oldCanvas = document.getElementById('game-canvas');
+const newCanvas = k.canvas;
+oldCanvas.parentNode.replaceChild(newCanvas, oldCanvas);
+// document.getElementById("game-wrapper").prepend(k.canvas);
 
 export default k;
